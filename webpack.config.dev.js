@@ -2,7 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 
 export default {
-	devtool: '#source-map',
+	devtool: 'inline-source-map',
 	devServer: {
 		contentBase: path.resolve(__dirname, 'src')
 	},
@@ -18,16 +18,9 @@ export default {
 	module: {
 		rules: [
 			{test: /\.(js|jsx)$/, use: 'babel-loader', exclude: [/node_modules/]},
-			{test: /\.css$/,
-				use: [
-					{ loader: 'style-loader' },
-					{
-						loader: 'css-loader',
-						options: {
-							modules: true
-						}
-					}
-				]
+			{
+				test: /\.css$/,
+				loader: 'style-loader!css-loader'
 			},
 			{
 				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
@@ -39,7 +32,10 @@ export default {
 		]
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.LoaderOptionsPlugin({
+			debug: true
+		})
 	],
 	target: 'web'
 };
